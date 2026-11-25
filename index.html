@@ -5,61 +5,603 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christmas Mystery Gift | 聖誕交換禮物</title>
 <style>
-:root{--ink:#473c32;--cream:#fff4c3;--red:#d95d50;--green:#659b64;--paper:#fffdf4}
-*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:"Segoe Print","Comic Sans MS","Noto Sans TC",system-ui,sans-serif;background:radial-gradient(ellipse at top,#fffbea,#f9e7a3);min-height:100vh} 
-#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
-.defs{position:absolute;width:0;height:0;overflow:hidden}.doodle{width:88px;height:88px;filter:drop-shadow(2px 3px 0 #73592a18);overflow:visible}.doodle use{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.wrap{max-width:980px;margin:auto;padding:30px 24px 48px;position:relative}.lights{display:block;width:100%;height:auto;overflow:visible}.bulb{animation:glow 2.8s ease-in-out infinite alternate}.bulb:nth-child(3n){animation-delay:-1.4s}@keyframes glow{to{opacity:.55;filter:drop-shadow(0 0 7px #fff)}}
-header{text-align:center;position:relative;padding:0 12px 0}.eyebrow{letter-spacing:.24em;font-size:12px;color:#855b46;font-weight:700}h1{font-size:clamp(38px,7vw,78px);line-height:1.05;color:#bc4840;margin:0 0 4px;letter-spacing:-.04em;transform:rotate(-2deg);font-family:"Segoe Print","Comic Sans MS",cursive}.hero-img{width:100%;max-height:260px;object-fit:cover;border-radius:18px;border:2px solid var(--ink);margin:16px 0}.hero-img[hidden]{display:none}.parade{display:flex;align-items:center;justify-content:center;gap:clamp(3px,2vw,22px);margin:4px auto 18px}.parade .doodle{width:clamp(38px,9vw,80px);height:auto;aspect-ratio:1;animation:bob 4s ease-in-out infinite}.parade .doodle:nth-child(2n){animation-delay:-2s}@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(4deg)}}
-.frame{position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:29px 22px 32px 24px;padding:18px 18px 10px;box-shadow:5px 7px 0 #a8773930;isolation:isolate}.frame:before{content:"";position:absolute;inset:7px;border:2px dashed #d95d50;border-radius:23px 17px 26px 19px;pointer-events:none;z-index:-1}.ribbon{position:relative;width:max-content;max-width:90%;margin:-37px auto 17px;background:#e66b59;border:2px solid var(--ink);padding:8px 24px;color:#fffdf1;font-weight:bold;letter-spacing:.12em;transform:rotate(-1deg);box-shadow:2px 3px 0 #473c3220}.form-area{background:#fff;border-radius:14px;overflow:hidden;position:relative}.corner{position:absolute;z-index:2;pointer-events:none;width:65px;height:65px}.tl{left:-27px;top:-33px;transform:rotate(-15deg)}.tr{right:-27px;top:-33px;transform:rotate(15deg)}.bl{left:-23px;bottom:-22px;transform:rotate(-9deg)}.br{right:-23px;bottom:-22px;transform:rotate(9deg)}.fallback{text-align:center;font-size:13px;padding:8px 8px 0}.fallback a{color:#865140;text-underline-offset:4px}.footer-art{display:flex;justify-content:center;gap:12px;margin-top:24px}.footer-art .doodle{width:55px;height:55px}footer{text-align:center;font-size:12px;letter-spacing:.12em;margin-top:16px;color:#795844}.snow-toggle{position:fixed;right:12px;bottom:12px;z-index:6;border:1.5px solid var(--ink);border-radius:20px;background:#fffbed;color:var(--ink);padding:8px 12px;cursor:pointer;font:inherit;font-size:12px}button:focus-visible,a:focus-visible{outline:3px solid #396d9b;outline-offset:3px}
-@media(max-width:600px){.wrap{padding:16px 12px 46px}.frame{padding:10px;border-radius:19px}.frame:before{inset:4px;border-radius:14px}.corner{width:45px;height:45px}.tl,.bl{left:-9px}.tr,.br{right:-9px}.tl,.tr{top:-25px}.bl,.br{bottom:-17px}.ribbon{margin-top:-30px;font-size:13px}header{padding-bottom:0}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+/* 01｜常用外觀設定：優先修改 :root 內的參數 */
+
+:root {
+    --ink: #473c32;
+    --cream: #fff4c3;
+    --red: #d95d50;
+    --green: #659b64;
+    --paper: #fffdf4;
+    /* 網頁整體 */
+    --page-width: 980px;
+    --page-padding: 10px 24px 48px;
+    --mobile-page-padding: 16px 12px 46px;
+    /* 彩燈 */
+    --lights-title-gap: 25px;
+    --light-animation-duration: 2.8s;
+    /* 標題 */
+    --title-size: clamp(45px, 7vw, 100px);
+    --title-color: #bc4840;
+    --title-bottom-gap: 20px;
+    --title-rotation: -2deg;
+    --header-padding: 0 12px 0;
+    /* 插畫 */
+    --parade-size: clamp(38px, 9vw, 80px);
+    --parade-gap: clamp(3px, 2vw, 22px);
+    --parade-top-gap: 4px;
+    --parade-bottom-gap: 18px;
+    --parade-animation-duration: 4s;
+    /* 表單外框 */
+    --frame-padding: 18px 18px 10px;
+    --mobile-frame-padding: 10px;
+    --form-initial-height: 450px;
+    --ribbon-bottom-gap: 17px;
+    --fallback-padding: 8px 8px 0;
+    /* 頁尾 */
+    --footer-art-gap: 24px;
+    --footer-text-gap: 16px;
+    /* 背景 */
+    --background-top: #fffbea;
+    --background-bottom: #f9e7a3;
+}
+
+/* 02｜全域與背景 */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--ink);
+    font-family: "Segoe Print","Comic Sans MS","Noto Sans TC",system-ui,sans-serif;
+    background: radial-gradient(ellipse at top, var(--background-top), var(--background-bottom));
+    min-height: 100vh;
+}
+
+/* 03｜飄雪畫布 */
+
+#snow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* 04｜SVG 插畫 */
+
+.defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.doodle {
+    width: 88px;
+    height: 88px;
+    filter: drop-shadow(2px 3px 0 #73592a18);
+    overflow: visible;
+}
+
+.doodle use {
+    stroke: var(--ink);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* 05｜頁面與彩燈 */
+
+.wrap {
+    max-width: var(--page-width);
+    margin: auto;
+    padding: var(--page-padding);
+    position: relative;
+}
+
+.lights {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    margin-bottom: var(--lights-title-gap);
+}
+
+.bulb {
+    animation: glow var(--light-animation-duration) ease-in-out infinite alternate;
+}
+
+.bulb:nth-child(3n) {
+    animation-delay: -1.4s;
+}
+
+@keyframes glow {
+    to {
+        opacity: .55;
+        filter: drop-shadow(0 0 7px #fff);
+    }
+}
+
+/* 06｜標題與主題圖片 */
+
+header {
+    text-align: center;
+    position: relative;
+    padding: var(--header-padding);
+}
+
+.eyebrow {
+    letter-spacing: .24em;
+    font-size: 12px;
+    color: #855b46;
+    font-weight: 700;
+}
+
+h1 {
+    font-size: var(--title-size);
+    line-height: 1.05;
+    color: var(--title-color);
+    margin: 0 0 var(--title-bottom-gap);
+    letter-spacing: -.04em;
+    transform: rotate(var(--title-rotation));
+    font-family: "Segoe Print","Comic Sans MS",cursive;
+}
+
+.hero-img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 2px solid var(--ink);
+    margin: 16px 0;
+}
+
+.hero-img[hidden] {
+    display: none;
+}
+
+/* 07｜聖誕插畫列 */
+
+.parade {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--parade-gap);
+    margin: var(--parade-top-gap) auto var(--parade-bottom-gap);
+}
+
+.parade .doodle {
+    width: var(--parade-size);
+    height: auto;
+    aspect-ratio: 1;
+    animation: bob var(--parade-animation-duration) ease-in-out infinite;
+}
+
+.parade .doodle:nth-child(2n) {
+    animation-delay: -2s;
+}
+
+@keyframes bob {
+    0%,100% {
+        transform: translateY(0) rotate(-4deg);
+    }
+    50% {
+        transform: translateY(-7px) rotate(4deg);
+    }
+}
+
+/* 08｜報名表外框 */
+
+.frame {
+    position: relative;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 29px 22px 32px 24px;
+    padding: var(--frame-padding);
+    box-shadow: 5px 7px 0 #a8773930;
+    isolation: isolate;
+}
+
+.frame:before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 2px dashed #d95d50;
+    border-radius: 23px 17px 26px 19px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.ribbon {
+    position: relative;
+    width: max-content;
+    max-width: 90%;
+    margin: -37px auto var(--ribbon-bottom-gap);
+    background: #e66b59;
+    border: 2px solid var(--ink);
+    padding: 8px 24px;
+    color: #fffdf1;
+    font-weight: bold;
+    letter-spacing: .12em;
+    transform: rotate(-1deg);
+    box-shadow: 2px 3px 0 #473c3220;
+}
+
+.form-area {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+}
+
+.corner {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    width: 65px;
+    height: 65px;
+}
+
+.tl {
+    left: -27px;
+    top: -33px;
+    transform: rotate(-15deg);
+}
+
+.tr {
+    right: -27px;
+    top: -33px;
+    transform: rotate(15deg);
+}
+
+.bl {
+    left: -23px;
+    bottom: -22px;
+    transform: rotate(-9deg);
+}
+
+.br {
+    right: -23px;
+    bottom: -22px;
+    transform: rotate(9deg);
+}
+
+.fallback {
+    text-align: center;
+    font-size: 13px;
+    padding: var(--fallback-padding);
+}
+
+.fallback a {
+    color: #865140;
+    text-underline-offset: 4px;
+}
+
+/* 09｜頁尾與飄雪開關 */
+
+.footer-art {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: var(--footer-art-gap);
+}
+
+.footer-art .doodle {
+    width: 55px;
+    height: 55px;
+}
+
+footer {
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: .12em;
+    margin-top: var(--footer-text-gap);
+    color: #795844;
+}
+
+.snow-toggle {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    z-index: 6;
+    border: 1.5px solid var(--ink);
+    border-radius: 20px;
+    background: #fffbed;
+    color: var(--ink);
+    padding: 8px 12px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+}
+
+button:focus-visible,a:focus-visible {
+    outline: 3px solid #396d9b;
+    outline-offset: 3px;
+}
+
+/* 10｜手機版（600px 以下） */
+
+@media (max-width:600px) {
+    .wrap {
+        padding: var(--mobile-page-padding);
+    }
+    .frame {
+        padding: var(--mobile-frame-padding);
+        border-radius: 19px;
+    }
+    .frame:before {
+        inset: 4px;
+        border-radius: 14px;
+    }
+    .corner {
+        width: 45px;
+        height: 45px;
+    }
+    .tl,.bl {
+        left: -9px;
+    }
+    .tr,.br {
+        right: -9px;
+    }
+    .tl,.tr {
+        top: -25px;
+    }
+    .bl,.br {
+        bottom: -17px;
+    }
+    .ribbon {
+        margin-top: -30px;
+        font-size: 13px;
+    }
+    header {
+        padding-bottom: 0;
+    }
+}
+
+/* 11｜減少動態效果 */
+
+@media (prefers-reduced-motion:reduce) {
+    *,*:before,*:after {
+        animation: none !important;
+    }
+}
 </style>
 </head>
 <body>
-<svg class="defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-<symbol id="tree" viewBox="0 0 100 100"><path fill="#bd9465" d="M44 73L45 94 57 93 56 72Z"/><path fill="#88b96e" d="M50 13L28 39 39 38 18 62 32 61 9 82Q50 88 91 81L68 60 80 61 61 38 73 39Z"/><path fill="#f6cb55" d="M50 2l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1Z"/><g fill="#e66b59"><circle cx="35" cy="53" r="4"/><circle cx="62" cy="66" r="5"/><circle cx="49" cy="34" r="4"/></g><path fill="none" stroke="#f7dc84" d="M27 70Q55 75 72 54M40 43Q55 47 62 41"/></symbol>
-<symbol id="snowman" viewBox="0 0 100 100"><path fill="#fffdf5" d="M32 44C7 57 15 94 49 94 85 94 92 59 68 44 82 14 19 6 27 35Z"/><path fill="#d95d50" d="M28 43Q49 54 70 43L71 54Q49 63 28 53ZM59 54L73 77 62 81 49 58Z"/><path fill="#f29a4e" d="M49 32L65 37 49 40Z"/><g fill="#473c32" stroke="none"><circle cx="39" cy="28" r="2.8"/><circle cx="56" cy="27" r="2.8"/><circle cx="49" cy="69" r="3"/><circle cx="49" cy="81" r="3"/></g><path fill="none" d="M25 59L9 48M13 51L11 40M76 60L93 47"/></symbol>
-<symbol id="gift" viewBox="0 0 100 100"><path fill="#e87865" d="M16 40L84 39 80 88 20 89Z"/><path fill="#f6c85c" d="M43 40H56L57 89H43Z"/><path fill="#e87865" d="M12 29L88 30 87 43 13 42Z"/><path fill="#f6c85c" d="M43 29H56V43H43Z"/><path fill="#f6c85c" d="M49 29C5 28 24-9 49 29 76-7 95 28 49 29Z"/></symbol>
-<symbol id="cake" viewBox="0 0 100 100"><path fill="#f2b87e" d="M21 46L79 46 74 87 26 87Z"/><path fill="#fffdf5" d="M17 49Q7 35 27 32 22 16 44 19 51 7 64 23 85 20 86 42 91 56 73 55 65 65 53 54 40 65 31 54 22 59 17 49Z"/><path fill="#de6557" d="M39 22Q38 7 50 5 64 5 61 22Z"/><path fill="none" stroke="#b77a56" d="M35 64L37 80M50 65V80M65 64L63 80"/></symbol>
-<symbol id="sock" viewBox="0 0 100 100"><path fill="#e87865" d="M40 22L75 23 69 64Q69 86 38 90 9 90 13 71 15 60 36 59Z"/><path fill="#fffdf5" d="M36 12Q42 6 49 11 57 4 64 11 78 5 79 17L77 30 36 29Z"/><path fill="none" stroke="#fff1cf" d="M40 44L69 47M38 51L68 54"/></symbol>
-<symbol id="star" viewBox="0 0 100 100"><path fill="#f8cf62" d="M50 8L62 35 92 38 70 59 76 89 50 74 23 89 29 59 8 38 38 35Z"/><path fill="none" d="M35 48v3M62 48v3M43 58q7 7 14-1"/></symbol>
-<symbol id="candle" viewBox="0 0 100 100"><path fill="#f9edd0" d="M35 37Q51 44 65 37L64 83 35 84Z"/><path fill="#db6555" d="M35 48L65 41V52L35 60ZM35 70L65 62V73L35 81Z"/><path fill="#f5b94c" d="M50 5Q71 27 51 36 30 29 50 5Z"/><path fill="none" d="M50 29V39"/><path fill="#86b477" d="M49 83L24 72 28 84 16 89 45 94 50 88 73 94 85 85 72 84 77 73Z"/><circle fill="#d95d50" cx="50" cy="89" r="5"/></symbol>
-<symbol id="bell" viewBox="0 0 100 100"><path fill="#f5ca62" d="M20 73Q34 59 32 35 34 17 50 16 68 16 69 37 67 58 82 73Q50 84 20 73Z"/><path fill="#edaa4d" d="M43 79Q44 94 51 94 61 93 61 79Z"/><path fill="#e36a58" d="M50 17Q10-10 16 18 19 30 50 17 84-10 86 14 85 29 50 17Z"/><path fill="none" d="M40 37Q39 56 32 65"/></symbol>
-<symbol id="bow" viewBox="0 0 100 100"><path fill="#d95d50" d="M46 47L22 91 39 83 47 94 54 55 68 89 72 76 89 83 62 45Z"/><path fill="#e87865" d="M46 41Q8 10 8 39L15 65Q31 63 48 50L53 50Q74 65 90 61L93 34Q90 13 54 41Z"/><path fill="#d95d50" d="M44 37Q51 34 58 38L59 54Q51 58 44 53Z"/><path fill="none" d="M21 39L43 45M80 39L59 45"/></symbol>
-</svg>
-<canvas id="snow" aria-hidden="true"></canvas>
-<main class="wrap">
-<svg id="lights" class="lights" viewBox="0 0 900 72" aria-hidden="true"><path d="M0 5Q112 92 225 5Q337 92 450 5Q562 92 675 5Q787 92 900 5" fill="none" stroke="#473c32" stroke-width="3" stroke-linecap="round"/></svg>
-<header><h1>Merry Christmas!</h1><img id="heroImage" class="hero-img" alt="聖誕活動主題圖片" hidden></header>
-<div class="parade" aria-hidden="true"><svg class="doodle"><use href="#tree"/></svg><svg class="doodle"><use href="#snowman"/></svg><svg class="doodle"><use href="#gift"/></svg><svg class="doodle"><use href="#cake"/></svg><svg class="doodle"><use href="#sock"/></svg><svg class="doodle"><use href="#star"/></svg></div>
-<section class="frame" aria-label="活動報名表"><svg class="doodle corner tl" aria-hidden="true"><use href="#bow"/></svg><svg class="doodle corner tr" aria-hidden="true"><use href="#bell"/></svg><svg class="doodle corner bl" aria-hidden="true"><use href="#gift"/></svg><svg class="doodle corner br" aria-hidden="true"><use href="#candle"/></svg><div class="ribbon">✦ 活動報名表 ✦</div><div class="form-area"><div style="width:100%;height:450px;" data-fillout-id="1e6t1eMZw5us" data-fillout-embed-type="standard" data-fillout-inherit-parameters data-fillout-dynamic-resize></div></div><div class="fallback"><a id="directLink" href="https://form.fillout.com/t/1e6t1eMZw5us" target="_blank" rel="noopener noreferrer">表單無法正常顯示？開啟原始 Fillout 表單 ↗</a></div></section>
-<div class="footer-art" aria-hidden="true"><svg class="doodle"><use href="#candle"/></svg><svg class="doodle"><use href="#star"/></svg><svg class="doodle"><use href="#bell"/></svg><svg class="doodle"><use href="#bow"/></svg></div><footer>MADE WITH LOVE · HAVE A MAGICAL CHRISTMAS</footer>
-</main><button class="snow-toggle" id="snowToggle" type="button" aria-pressed="true">❄ 關閉飄雪</button>
+    <!-- SVG 插畫素材：通常不需要修改 -->
+    <svg class="defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <symbol id="tree" viewBox="0 0 100 100">
+            <path fill="#bd9465" d="M44 73L45 94 57 93 56 72Z"/>
+            <path fill="#88b96e" d="M50 13L28 39 39 38 18 62 32 61 9 82Q50 88 91 81L68 60 80 61 61 38 73 39Z"/>
+            <path fill="#f6cb55" d="M50 2l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1Z"/>
+            <g fill="#e66b59">
+                <circle cx="35" cy="53" r="4"/>
+                <circle cx="62" cy="66" r="5"/>
+                <circle cx="49" cy="34" r="4"/>
+            </g>
+            <path fill="none" stroke="#f7dc84" d="M27 70Q55 75 72 54M40 43Q55 47 62 41"/>
+        </symbol>
+        <symbol id="snowman" viewBox="0 0 100 100">
+            <path fill="#fffdf5" d="M32 44C7 57 15 94 49 94 85 94 92 59 68 44 82 14 19 6 27 35Z"/>
+            <path fill="#d95d50" d="M28 43Q49 54 70 43L71 54Q49 63 28 53ZM59 54L73 77 62 81 49 58Z"/>
+            <path fill="#f29a4e" d="M49 32L65 37 49 40Z"/>
+            <g fill="#473c32" stroke="none">
+                <circle cx="39" cy="28" r="2.8"/>
+                <circle cx="56" cy="27" r="2.8"/>
+                <circle cx="49" cy="69" r="3"/>
+                <circle cx="49" cy="81" r="3"/>
+            </g>
+            <path fill="none" d="M25 59L9 48M13 51L11 40M76 60L93 47"/>
+        </symbol>
+        <symbol id="gift" viewBox="0 0 100 100">
+            <path fill="#e87865" d="M16 40L84 39 80 88 20 89Z"/>
+            <path fill="#f6c85c" d="M43 40H56L57 89H43Z"/>
+            <path fill="#e87865" d="M12 29L88 30 87 43 13 42Z"/>
+            <path fill="#f6c85c" d="M43 29H56V43H43Z"/>
+            <path fill="#f6c85c" d="M49 29C5 28 24-9 49 29 76-7 95 28 49 29Z"/>
+        </symbol>
+        <symbol id="cake" viewBox="0 0 100 100">
+            <path fill="#f2b87e" d="M21 46L79 46 74 87 26 87Z"/>
+            <path fill="#fffdf5" d="M17 49Q7 35 27 32 22 16 44 19 51 7 64 23 85 20 86 42 91 56 73 55 65 65 53 54 40 65 31 54 22 59 17 49Z"/>
+            <path fill="#de6557" d="M39 22Q38 7 50 5 64 5 61 22Z"/>
+            <path fill="none" stroke="#b77a56" d="M35 64L37 80M50 65V80M65 64L63 80"/>
+        </symbol>
+        <symbol id="sock" viewBox="0 0 100 100">
+            <path fill="#e87865" d="M40 22L75 23 69 64Q69 86 38 90 9 90 13 71 15 60 36 59Z"/>
+            <path fill="#fffdf5" d="M36 12Q42 6 49 11 57 4 64 11 78 5 79 17L77 30 36 29Z"/>
+            <path fill="none" stroke="#fff1cf" d="M40 44L69 47M38 51L68 54"/>
+        </symbol>
+        <symbol id="star" viewBox="0 0 100 100">
+            <path fill="#f8cf62" d="M50 8L62 35 92 38 70 59 76 89 50 74 23 89 29 59 8 38 38 35Z"/>
+            <path fill="none" d="M35 48v3M62 48v3M43 58q7 7 14-1"/>
+        </symbol>
+        <symbol id="candle" viewBox="0 0 100 100">
+            <path fill="#f9edd0" d="M35 37Q51 44 65 37L64 83 35 84Z"/>
+            <path fill="#db6555" d="M35 48L65 41V52L35 60ZM35 70L65 62V73L35 81Z"/>
+            <path fill="#f5b94c" d="M50 5Q71 27 51 36 30 29 50 5Z"/>
+            <path fill="none" d="M50 29V39"/>
+            <path fill="#86b477" d="M49 83L24 72 28 84 16 89 45 94 50 88 73 94 85 85 72 84 77 73Z"/>
+            <circle fill="#d95d50" cx="50" cy="89" r="5"/>
+        </symbol>
+        <symbol id="bell" viewBox="0 0 100 100">
+            <path fill="#f5ca62" d="M20 73Q34 59 32 35 34 17 50 16 68 16 69 37 67 58 82 73Q50 84 20 73Z"/>
+            <path fill="#edaa4d" d="M43 79Q44 94 51 94 61 93 61 79Z"/>
+            <path fill="#e36a58" d="M50 17Q10-10 16 18 19 30 50 17 84-10 86 14 85 29 50 17Z"/>
+            <path fill="none" d="M40 37Q39 56 32 65"/>
+        </symbol>
+        <symbol id="bow" viewBox="0 0 100 100">
+            <path fill="#d95d50" d="M46 47L22 91 39 83 47 94 54 55 68 89 72 76 89 83 62 45Z"/>
+            <path fill="#e87865" d="M46 41Q8 10 8 39L15 65Q31 63 48 50L53 50Q74 65 90 61L93 34Q90 13 54 41Z"/>
+            <path fill="#d95d50" d="M44 37Q51 34 58 38L59 54Q51 58 44 53Z"/>
+            <path fill="none" d="M21 39L43 45M80 39L59 45"/>
+        </symbol>
+    </svg>
+    <canvas id="snow" aria-hidden="true">
+    </canvas>
+    <!-- 網頁主要內容 -->
+    <main class="wrap">
+        <svg id="lights" class="lights" viewBox="0 0 900 72" aria-hidden="true">
+            <path d="M0 5Q112 92 225 5Q337 92 450 5Q562 92 675 5Q787 92 900 5" fill="none" stroke="#473c32" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <header>
+            <h1>Merry Christmas!</h1>
+            <img id="heroImage" class="hero-img" alt="聖誕活動主題圖片" hidden>
+        </header>
+        <div class="parade" aria-hidden="true">
+            <svg class="doodle">
+                <use href="#tree"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#snowman"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#gift"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#cake"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#sock"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#star"/>
+            </svg>
+        </div>
+        <!-- Fillout 報名表：保留官方自動高度調整 -->
+        <section class="frame" aria-label="活動報名表">
+            <svg class="doodle corner tl" aria-hidden="true">
+                <use href="#bow"/>
+            </svg>
+            <svg class="doodle corner tr" aria-hidden="true">
+                <use href="#bell"/>
+            </svg>
+            <svg class="doodle corner bl" aria-hidden="true">
+                <use href="#gift"/>
+            </svg>
+            <svg class="doodle corner br" aria-hidden="true">
+                <use href="#candle"/>
+            </svg>
+            <div class="ribbon">✦ 活動報名表 ✦</div>
+            <div class="form-area">
+                <div style="width:100%;height:var(--form-initial-height);" data-fillout-id="1e6t1eMZw5us" data-fillout-embed-type="standard" data-fillout-inherit-parameters data-fillout-dynamic-resize>
+                </div>
+            </div>
+            <div class="fallback">
+                <a id="directLink" href="https://form.fillout.com/t/1e6t1eMZw5us" target="_blank" rel="noopener noreferrer">表單無法正常顯示？開啟原始 Fillout 表單 ↗</a>
+            </div>
+        </section>
+        <div class="footer-art" aria-hidden="true">
+            <svg class="doodle">
+                <use href="#candle"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#star"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#bell"/>
+            </svg>
+            <svg class="doodle">
+                <use href="#bow"/>
+            </svg>
+        </div>
+        <footer>MADE WITH LOVE · HAVE A MAGICAL CHRISTMAS</footer>
+    </main>
+    <button class="snow-toggle" id="snowToggle" type="button" aria-pressed="true">❄ 關閉飄雪</button>
+
 <script>
 // ====== 只需要修改這裡 ======
 const CONFIG = {
-  themeImage: '', // 例如 './christmas-banner.jpg'，留空則不顯示
-  snowDensity: 125,
-  snowSpeed: 1,
-  snowColor: '#ffffff'
+    themeImage: '', // 例如 './christmas-banner.jpg'，留空則不顯示
+    snowDensity: 125,
+    snowSpeed: 1,
+    snowColor: '#ffffff',
+    // 雪花尺寸、透明度與形狀比例
+    snowRadiusMin: 1.2,
+    snowRadiusMax: 4.1,
+    snowOpacityMin: .8,
+    snowOpacityMax: 1,
+    snowStarRatio: .12,
+    snowShadowColor: '#ffffff',
+    snowShadowBlur: 0,
+    // 彩燈數量、起點、間距與顏色
+    lightCount: 24,
+    lightStart: 18,
+    lightSpacing: 37.5,
+    lightColors: ['#e87865', '#f6cb55', '#88b96e', '#83c5d2']
 };
 // ====== 自訂主題圖片 ======
-if(CONFIG.themeImage){const img=document.getElementById('heroImage');img.src=CONFIG.themeImage;img.hidden=false;img.addEventListener('error',()=>img.hidden=true);}
+if (CONFIG.themeImage) {
+    const img = document.getElementById('heroImage');
+    img.src = CONFIG.themeImage;
+    img.hidden = false;
+    img.addEventListener('error', () => img.hidden = true);
+}
 // ====== 手繪燈串 ======
-const ns='http://www.w3.org/2000/svg', lights=document.getElementById('lights');
-const colors=['#e87865','#f6cb55','#88b96e','#83c5d2'];
-for(let i=0;i<24;i++){const x=18+i*37.5,t=(x%225)/225,y=5+174*t*(1-t);const g=document.createElementNS(ns,'g');g.setAttribute('transform',`translate(${x} ${y}) rotate(${(t-.5)*-40})`);g.setAttribute('class','bulb');const cap=document.createElementNS(ns,'rect');for(const [k,v] of Object.entries({x:-4,y:-1,width:8,height:6,rx:2,fill:'#473c32'}))cap.setAttribute(k,v);const bulb=document.createElementNS(ns,'path');for(const [k,v] of Object.entries({d:'M-4 4 Q-13 17 0 23 Q13 17 4 4Z',fill:colors[i%4],stroke:'#473c32','stroke-width':1.8}))bulb.setAttribute(k,v);g.append(cap,bulb);lights.append(g);}
+const ns = 'http://www.w3.org/2000/svg', lights = document.getElementById('lights');
+const colors = CONFIG.lightColors;
+for (let i = 0; i < CONFIG.lightCount; i++) {
+    const x = CONFIG.lightStart + i * CONFIG.lightSpacing, t = (x % 225) / 225, y = 5 + 174 * t * (1 - t);
+    const g = document.createElementNS(ns, 'g');
+    g.setAttribute('transform', `translate(${x} ${y}) rotate(${(t - .5) * -40})`);
+    g.setAttribute('class', 'bulb');
+    const cap = document.createElementNS(ns, 'rect');
+    for (const [k, v] of Object.entries({ x: -4, y: -1, width: 8, height: 6, rx: 2, fill: '#473c32' }))
+        cap.setAttribute(k, v);
+    const bulb = document.createElementNS(ns, 'path');
+    for (const [k, v] of Object.entries({ d: 'M-4 4 Q-13 17 0 23 Q13 17 4 4Z', fill: colors[i % colors.length], stroke: '#473c32', 'stroke-width': 1.8 }))
+        bulb.setAttribute(k, v);
+    g.append(cap, bulb);
+    lights.append(g);
+}
 // ====== Canvas 飄雪 ======
-const canvas=document.getElementById('snow'),ctx=canvas.getContext('2d'),toggle=document.getElementById('snowToggle');
-const reduced=matchMedia('(prefers-reduced-motion: reduce)');let enabled=!reduced.matches,w=0,h=0,flakes=[],raf=0,last=0;
-const rand=(a,b)=>a+Math.random()*(b-a);
-function makeFlake(initial=false){return{x:rand(0,w),y:initial?rand(0,h):rand(-70,-8),r:rand(1.2,4.1),vy:rand(18,55),vx:rand(-8,8),phase:rand(0,Math.PI*2),sway:rand(5,17),opacity:rand(.8,1),star:Math.random()<.12};}
-function resize(){w=innerWidth;h=innerHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);const n=Math.max(12,Math.round(CONFIG.snowDensity*Math.min(1,w/900)));flakes=Array.from({length:n},()=>makeFlake(true));}
-function drawFlake(f){ctx.globalAlpha=f.opacity;ctx.fillStyle=CONFIG.snowColor;ctx.strokeStyle=CONFIG.snowColor;ctx.shadowColor='#ffffff';ctx.shadowBlur=0;if(f.star){ctx.lineWidth=1;ctx.beginPath();for(let i=0;i<3;i++){const a=i*Math.PI/3;ctx.moveTo(f.x-Math.cos(a)*f.r*1.7,f.y-Math.sin(a)*f.r*1.7);ctx.lineTo(f.x+Math.cos(a)*f.r*1.7,f.y+Math.sin(a)*f.r*1.7);}ctx.stroke();}else{ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill();}}
-function animate(now){raf=0;if(!enabled||document.hidden)return;const dt=last?Math.min((now-last)/1000,.05):0;last=now;ctx.clearRect(0,0,w,h);for(let i=0;i<flakes.length;i++){let f=flakes[i];f.phase+=dt*.8;f.x+=(f.vx+Math.sin(f.phase)*f.sway)*dt*CONFIG.snowSpeed;f.y+=f.vy*dt*CONFIG.snowSpeed;if(f.y>h+12){flakes[i]=f=makeFlake();}if(f.x<-15)f.x=w+15;if(f.x>w+15)f.x=-15;drawFlake(f);}ctx.globalAlpha=1;raf=requestAnimationFrame(animate);}
-function sync(){cancelAnimationFrame(raf);raf=0;last=0;ctx.clearRect(0,0,w,h);toggle.textContent=enabled?'❄ 關閉飄雪':'❄ 開啟飄雪';toggle.setAttribute('aria-pressed',String(enabled));if(enabled&&!document.hidden)raf=requestAnimationFrame(animate);}
-resize();sync();addEventListener('resize',resize);toggle.addEventListener('click',()=>{enabled=!enabled;sync();});document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',e=>{enabled=!e.matches;sync();});
+const canvas = document.getElementById('snow'), ctx = canvas.getContext('2d'), toggle = document.getElementById('snowToggle');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+let enabled = !reduced.matches, w = 0, h = 0, flakes = [], raf = 0, last = 0;
+const rand = (a, b) => a + Math.random() * (b - a);
+function makeFlake(initial = false) { return { x: rand(0, w), y: initial ? rand(0, h) : rand(-70, -8), r: rand(CONFIG.snowRadiusMin, CONFIG.snowRadiusMax), vy: rand(18, 55), vx: rand(-8, 8), phase: rand(0, Math.PI * 2), sway: rand(5, 17), opacity: rand(CONFIG.snowOpacityMin, CONFIG.snowOpacityMax), star: Math.random() < CONFIG.snowStarRatio }; }
+function resize() { w = innerWidth; h = innerHeight; const dpr = Math.min(devicePixelRatio || 1, 2); canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const n = Math.max(12, Math.round(CONFIG.snowDensity * Math.min(1, w / 900))); flakes = Array.from({ length: n }, () => makeFlake(true)); }
+function drawFlake(f) { ctx.globalAlpha = f.opacity; ctx.fillStyle = CONFIG.snowColor; ctx.strokeStyle = CONFIG.snowColor; ctx.shadowColor = CONFIG.snowShadowColor; ctx.shadowBlur = CONFIG.snowShadowBlur; if (f.star) {
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i < 3; i++) {
+        const a = i * Math.PI / 3;
+        ctx.moveTo(f.x - Math.cos(a) * f.r * 1.7, f.y - Math.sin(a) * f.r * 1.7);
+        ctx.lineTo(f.x + Math.cos(a) * f.r * 1.7, f.y + Math.sin(a) * f.r * 1.7);
+    }
+    ctx.stroke();
+}
+else {
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+    ctx.fill();
+} }
+function animate(now) { raf = 0; if (!enabled || document.hidden)
+    return; const dt = last ? Math.min((now - last) / 1000, .05) : 0; last = now; ctx.clearRect(0, 0, w, h); for (let i = 0; i < flakes.length; i++) {
+    let f = flakes[i];
+    f.phase += dt * .8;
+    f.x += (f.vx + Math.sin(f.phase) * f.sway) * dt * CONFIG.snowSpeed;
+    f.y += f.vy * dt * CONFIG.snowSpeed;
+    if (f.y > h + 12) {
+        flakes[i] = f = makeFlake();
+    }
+    if (f.x < -15)
+        f.x = w + 15;
+    if (f.x > w + 15)
+        f.x = -15;
+    drawFlake(f);
+} ctx.globalAlpha = 1; raf = requestAnimationFrame(animate); }
+function sync() { cancelAnimationFrame(raf); raf = 0; last = 0; ctx.clearRect(0, 0, w, h); toggle.textContent = enabled ? '❄ 關閉飄雪' : '❄ 開啟飄雪'; toggle.setAttribute('aria-pressed', String(enabled)); if (enabled && !document.hidden)
+    raf = requestAnimationFrame(animate); }
+resize();
+sync();
+addEventListener('resize', resize);
+toggle.addEventListener('click', () => { enabled = !enabled; sync(); });
+document.addEventListener('visibilitychange', sync);
+reduced.addEventListener('change', e => { enabled = !e.matches; sync(); });
 </script>
 <script src="https://server.fillout.com/embed/v1/"></script>
 </body>
